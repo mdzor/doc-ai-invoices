@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document AI Invoice ID Extractor</title>
+</head>
+<body>
+  <form id="uploadForm" enctype="multipart/form-data">
+    <input type="file" name="images" id="images" multiple />
+    <button type="submit">Extract Invoice IDs</button>
+  </form>
+  <ul id="invoiceIds"></ul>
+
+  <script>
+    document.getElementById('uploadForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const formData = new FormData(e.target);
+      const response = await fetch('http://localhost:3000/upload', {
+        method: 'POST',
+        body: formData,
+      });
+      const { invoiceIds } = await response.json();
+      const listElement = document.getElementById('invoiceIds');
+      listElement.innerHTML = '';
+      invoiceIds.forEach(invoiceId => {
+        const listItem = document.createElement('li');
+        listItem.textContent = invoiceId || 'Invoice ID not found';
+        listElement.appendChild(listItem);
+      });
+    });
+  </script>
+</body>
+</html>
+
